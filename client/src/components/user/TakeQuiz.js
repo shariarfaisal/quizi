@@ -1,9 +1,9 @@
 import React,{ useContext, useState } from 'react'
-import { UserBaseContext } from '../contexts/UserBaseContext'
+import { UserSubmissionContext } from '../contexts/UserSubmissionContext'
 
 
 const TakeQuiz = (props) => {
-  const { takeQuiz } = useContext(UserBaseContext)
+  const { takeQuiz } = useContext(UserSubmissionContext)
   const [data,setData] = useState(null)
   const [loading,setLoading] = useState(false)
   const [error,setError] = useState('')
@@ -15,7 +15,9 @@ const TakeQuiz = (props) => {
       setError
     })
   }
-console.log(data);
+
+
+
   return(
     <div className="col-md-6 col-lg-4 d-flex pointer justify-content-center  shadow p-5">
       {!data && <h5 className="text-info" onClick={takeHandler}>

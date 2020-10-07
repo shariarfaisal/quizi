@@ -38,7 +38,7 @@ export class SubmissionService {
     user: User,
     dto: CreateSubmissionAnswerDto
   ): Promise<SubmissionAnswer>{
-    const submission = await Submission.findOne({ id: submissionId, user:{ id: user.id }})
+    const submission = await Submission.findOne({ id: submissionId, user:{ id: user.id } })
     if(!submission){
       throw new NotFoundException()
     }
@@ -48,10 +48,11 @@ export class SubmissionService {
     }
 
     // Check it out Submission whether time over or not
-    const submissionTime = new Date(submission.createdAt).getTime()
+    const createdAt = new Date(submission.createdAt).getTime()
+    const duration = submission.quiz.duration * 60 * 1000
+    const deadline = createdAt + duration
     const now = new Date().getTime()
-    const fixedTime = submission.quiz.questionCount * 1000
-    if((submissionTime - now) > fixedTime){
+    if(deadline < now){
       submission.status = SubmissionStatus.Closed
       await submission.save()
       throw new BadRequestException({ errors:{ msg: "Quiz closed."}})
@@ -75,12 +76,24 @@ export class SubmissionService {
     submissionAnswer.question = question
     submissionAnswer.answer = answer
     await submissionAnswer.save()
+
+    if(question.answer === answer){
+      submission.result += 1
+      await submission.save()
+    }
+
+
     return submissionAnswer
   }
 
 
   async getSubmissions(): Promise<Submission[]>{
-    const items = await Submission.find()
+    let items = await Submission.find()
+    return items
+  }
+
+  async getSubmissionsByUserId(userId: string): Promise<Submission[]>{
+    let items = await Submission.find({ user:{ id: userId }})
     return items
   }
 
@@ -91,6 +104,20 @@ export class SubmissionService {
 
   async getSubmissionById(id: string): Promise<Submission>{
     const item = await Submission.findOne(id)
+    if(!item){
+      throw new NotFoundException()
+    }
+
+    const questions = await Question.find({ quiz:{ id: item.quiz.id }})
+    item.quiz['questions'] = questions
+
+    const answers = await SubmissionAnswer.find({ submission:{ id }})
+    item.answers = answers
+    return item
+  }
+
+  async getSubmissionByIdForUser(id: string, user: User): Promise<Submission>{
+    const item = await Submission.findOne({ id, user:{ id: user.id }})
     if(!item){
       throw new NotFoundException()
     }

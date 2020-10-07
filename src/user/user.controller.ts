@@ -23,7 +23,7 @@ export class UserController {
   }
 
   @Get('/')
-  @UseGuards(AuthGuard('user'))
+  @UseGuards(AuthGuard('admin'))
   getUsers():Promise<User[]>{
     return this.userService.getUsers()
   }

@@ -9,7 +9,7 @@ export class User extends BaseEntity{
   @Column()
   username: string;
 
-  @Column()
+  @Column({ select: false})
   password: string;
 
   @OneToMany(type => Submission, submission => submission.user,{ eager: false, onDelete: 'CASCADE'})

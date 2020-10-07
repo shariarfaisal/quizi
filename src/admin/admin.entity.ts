@@ -1,4 +1,4 @@
-import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm'
+import { Entity, BaseEntity, PrimaryGeneratedColumn, Column } from 'typeorm'
 
 @Entity()
 export class Admin extends BaseEntity{
@@ -8,7 +8,7 @@ export class Admin extends BaseEntity{
   @Column()
   username: string;
 
-  @Column()
+  @Column({ select: false})
   password: string;
 
   // @OneToMany(type => Quize, quize => quize.author,{ eager: false, onDelete: 'CASCADE'})

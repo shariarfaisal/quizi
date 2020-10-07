@@ -32,7 +32,7 @@ export class Question extends BaseEntity{
   @Column()
   optionD: string;
 
-  @Column({ type: 'enum', enum: Answer})
+  @Column({ type: 'enum', enum: Answer })
   answer: Answer
 
   @OneToMany(type => SubmissionAnswer, answer => answer.question, { eager: false })

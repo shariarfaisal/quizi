@@ -1,12 +1,15 @@
 import React,{ useContext, useEffect} from 'react'
 import { AdminSubmissionContext } from '../contexts/AdminSubmissionContext'
-import SubmissionsItem from './SubmissionsItem'
+import SubmissionsItem from '../home/SubmissionsItem'
+import { useParams } from 'react-router-dom'
 
-const HomeBody = (props) => {
-  const { getSubmissions, submissions } = useContext(AdminSubmissionContext)
+
+const Submissions = (props) => {
+  const { getSubmissionsByUserId, userSubmissions } = useContext(AdminSubmissionContext)
+  const { userId } = useParams()
 
   useEffect(() => {
-    getSubmissions({ userId: ''})
+    getSubmissionsByUserId({ userId })
   },[])
 
   return(
@@ -23,13 +26,12 @@ const HomeBody = (props) => {
               <div style={{width: "15%"}}>Result</div>
             </div>
 
-            {submissions && submissions.length === 0 && <div className="list-group-item my-2 text-center border-0 rounded-0 p-3">No Item</div>}
-            
-            { submissions && submissions.map((s,i) => <SubmissionsItem key={i} i={i+1} {...s} />)}
+
+            { userSubmissions && userSubmissions.map((s,i) => <SubmissionsItem key={i} i={i+1} {...s} />)}
           </div>
         </div>
       </div>
     </div>
   )
 }
-export default HomeBody
+export default Submissions

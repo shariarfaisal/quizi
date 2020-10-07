@@ -36,7 +36,7 @@ export class UserService {
 
   async signin(dto: SigninDto):Promise<{accessToken: string}>{
     const { username, password } = dto
-    const user = await User.findOne({ username })
+    const user = await User.findOne({ where:{ username }, select:['id','username','password'] })
     if(!user){
       throw new BadRequestException({ errors:{ msg: "Invalid cridentials."}})
     }

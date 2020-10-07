@@ -25,6 +25,9 @@ export class Submission extends BaseEntity{
   @Column()
   status: SubmissionStatus
 
+  @Column({ nullable: true, default: 0 })
+  result: number
+
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   createdAt: string;
 }

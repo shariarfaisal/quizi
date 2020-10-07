@@ -5,10 +5,16 @@ import { CreateQuestionDto } from './dto/create-question.dto';
 import { questionValidator } from './validators/question.validator';
 import { quizValidator } from './validators/quiz.validator';
 import { Question } from './question.entity';
+import { User } from 'src/user/user.entity';
 
 
 @Injectable()
 export class QuizService {
+
+  async userHomepageQuizs(user: User): Promise<Quiz[]>{
+    const quizs = await Quiz.find({ published: true })
+    return quizs
+  }
 
   async createQuiz(dto: CreateQuizDto): Promise<Quiz>{
     const { errors, isValid } = quizValidator(dto)
@@ -43,7 +49,7 @@ export class QuizService {
     }
     const { name, optionA, optionB, optionC, optionD, answer } = dto
 
-    const exists = await Question.findOne({ name })
+    const exists = await Question.findOne({ quiz:{ id: quiz.id}, name })
     if(exists){
       throw new BadRequestException({ errors:{ name: "Already exists this Question."}})
     }

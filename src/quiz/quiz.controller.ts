@@ -5,6 +5,8 @@ import { Quiz } from './quiz.entity';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { Question } from './question.entity';
+import { User } from 'src/user/user.entity';
+import { GetUser } from 'src/user/get-user.decorator';
 
 @Controller('quiz')
 export class QuizController {
@@ -20,6 +22,13 @@ export class QuizController {
   @UseGuards(AuthGuard('admin'))
   getQuizs(): Promise<Quiz[]>{
     return this.quizService.getQuizs()
+  }
+
+  @Get('/user')
+  @UseGuards(AuthGuard('user'))
+  getQuizesForUser(@GetUser() user: User): Promise<Quiz[]>{
+    // TODO: Make changes for user ....
+    return this.quizService.userHomepageQuizs(user)
   }
 
   @Get('/:id')

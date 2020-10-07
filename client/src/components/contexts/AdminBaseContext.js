@@ -9,8 +9,26 @@ export const AdminBaseContext = createContext()
 const AdminBaseContextProvider = ({ children }) => {
   const [admin,setAdmin] = useState(null)
   const [admins,setAdmins] = useState(null)
+  const [users,setUsers] = useState(null)
   const header = 'x-admin-token'
   const history = useHistory()
+
+
+  // Get All users
+  const getUsers = async () => {
+    try{
+      const get = await axios.get('/user')
+      if(get.data){
+        setUsers(get.data)
+      }
+    }catch(err){
+      if(err.response.status === 401){
+        history.push('/admin/login')
+      }else{
+        console.log(err);
+      }
+    }
+  }
 
 
   // Get Admin Login ...
@@ -90,7 +108,7 @@ const AdminBaseContextProvider = ({ children }) => {
 
   return(
     <AdminBaseContext.Provider value={{
-      getLogin, admin, getAdmins, admins, header
+      getLogin, admin, getAdmins, admins, header, users, getUsers
     }}>
       { children }
     </AdminBaseContext.Provider>
